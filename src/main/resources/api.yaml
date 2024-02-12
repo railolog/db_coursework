@@ -130,7 +130,7 @@ paths:
               schema:
                 $ref: 'schemas.yaml#/components/schemas/BetResponseTo'
 
-  /bets/by-fight/{fightIdd}:
+  /bets/by-fight/{fightId}:
     get:
       operationId: getBetByFightId
       tags: [ bet ]
