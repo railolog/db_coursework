@@ -1,0 +1,173 @@
+components:
+  schemas:
+    idType:
+      type: integer
+      format: int32
+      nullable: false
+
+    PaymentRequestTo:
+      type: object
+      properties:
+        amount:
+          type: integer
+          format: int32
+
+    UserInfoResponseTo:
+      type: object
+      properties:
+        login:
+          type: string
+        balance:
+          type: number
+          format: double
+
+    UserBalanceResponseTo:
+      type: object
+      properties:
+        balance:
+          type: number
+          format: double
+
+    SignUpRequestTo:
+      type: object
+      required: [ username, password ]
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+
+    SignInRequestTo:
+      type: object
+      required: [ username, password ]
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+
+    JwtResponseTo:
+      type: object
+      required: [ token ]
+      properties:
+        token:
+          type: string
+
+    BetRequestTo:
+      type: object
+      properties:
+        fightId:
+          type: integer
+        credits:
+          type: integer
+        firstPokemonChosen:
+          type: boolean
+
+    BetResponseTo:
+      type: object
+      properties:
+        id:
+          type: integer
+        fight:
+          $ref: "#/components/schemas/FightResponseTo"
+        credits:
+          type: integer
+        firstPokemonChosen:
+          type: boolean
+        betCoef:
+          type: number
+          format: double
+
+
+    BetListResponseTo:
+      type: object
+      properties:
+        bets:
+          type: array
+          items:
+            - $ref: "#/components/schemas/BetResponseTo"
+
+    FightRequestTo:
+      type: object
+      properties:
+        firstPokemonId:
+          type: integer
+        secondPokemonId:
+          type: integer
+        locationId:
+          type: integer
+
+    FightListResponseTo:
+      type: object
+      properties:
+        fights:
+          type: array
+          items:
+            - $ref: "#/components/schemas/FightResponseTo"
+
+    FightResponseTo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        firstPokemon:
+          $ref: "#/components/schemas/PokemonTo"
+        secondPokemon:
+          $ref: "#/components/schemas/PokemonTo"
+        location:
+          $ref: "#/components/schemas/LocationTo"
+        coefficientFirst:
+          type: number
+          format: double
+        coefficientSecond:
+          type: number
+          format: double
+        isCompleted:
+          type: boolean
+        firstWon:
+          type: boolean
+
+    PokemonListTo:
+      type: object
+      required: [ pokemons ]
+      properties:
+        pokemons:
+          type: array
+          items:
+              - $ref: "#/components/schemas/PokemonTo"
+
+    PokemonTo:
+      type: object
+      required: [  ]
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        type:
+          type: string
+        trainer:
+          type: object
+          properties:
+            type: string
+
+    LocationListTo:
+      type: object
+      properties:
+        locations:
+          type: array
+          items:
+            - $ref: "#/components/schemas/LocationTo"
+
+    LocationTo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        description:
+          type: string

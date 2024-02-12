@@ -1,0 +1,265 @@
+openapi: 3.0.0
+
+info:
+  description: API scheme for pokebet
+  version: "1.0.0"
+  title: pokebet
+
+tags:
+  - name: pokemon
+
+servers:
+  - url: http://localhost:8080
+
+paths:
+
+  /auth/signup:
+    post:
+      operationId: signUp
+      tags: [ auth ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'schemas.yaml#/components/schemas/SignUpRequestTo'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/JwtResponseTo'
+
+  /auth/signin:
+    post:
+      operationId: signIn
+      tags: [ auth ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'schemas.yaml#/components/schemas/SignInRequestTo'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/JwtResponseTo'
+
+  /payment:
+    post:
+      operationId: increaseBalance
+      tags: [ user ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'schemas.yaml#/components/schemas/PaymentRequestTo'
+      responses:
+        200:
+          description: OK
+
+  /user/me:
+    get:
+      operationId: getMeInfo
+      tags: [ user ]
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/UserInfoResponseTo'
+
+  /user/balance:
+    get:
+      operationId: getBalance
+      tags: [ user ]
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/UserBalanceResponseTo'
+
+  /bets:
+    post:
+      operationId: createBet
+      tags: [ bet ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'schemas.yaml#/components/schemas/BetRequestTo'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/BetResponseTo'
+    get:
+      operationId: getMyBets
+      description: Получение всех ставок пользователя
+      tags: [ bet ]
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/BetListResponseTo'
+
+  /bets/{id}:
+    get:
+      operationId: getBetById
+      tags: [ bet ]
+      parameters:
+        - $ref: 'parameters.yaml#/components/parameters/idPathParam'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/BetResponseTo'
+
+  /bets/by-fight/{fightIdd}:
+    get:
+      operationId: getBetByFightId
+      tags: [ bet ]
+      parameters:
+        - $ref: 'parameters.yaml#/components/parameters/idPathParam'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/BetListResponseTo'
+
+  /fights:
+    post:
+      operationId: createFight
+      tags: [ fight ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'schemas.yaml#/components/schemas/FightRequestTo'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/FightResponseTo'
+    get:
+      operationId: getMyFights
+      description: Получение всех боев пользователя
+      tags: [ fight ]
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/FightListResponseTo'
+
+  /fights/{id}:
+    get:
+      operationId: getFightById
+      tags: [ fight ]
+      parameters:
+        - $ref: 'parameters.yaml#/components/parameters/idPathParam'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/FightResponseTo'
+
+  /fights/start/{id}:
+    post:
+      operationId: startFight
+      tags: [ fight ]
+      parameters:
+        - $ref: 'parameters.yaml#/components/parameters/idPathParam'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/FightResponseTo'
+
+  /pokemons:
+    get:
+      operationId: getAllPokemons
+      description: Получение всех покемонов
+      tags: [ pokemon ]
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/PokemonListTo'
+
+  /pokemons/{id}:
+    get:
+      operationId: getPokemon
+      tags: [ pokemon ]
+      parameters:
+        - $ref: 'parameters.yaml#/components/parameters/idPathParam'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/PokemonTo'
+
+  /locations:
+    get:
+      operationId: getAllLocations
+      tags: [ location ]
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/LocationListTo'
+
+  /locations/{id}:
+    get:
+      operationId: getLocation
+      tags: [ location ]
+      parameters:
+        - $ref: 'parameters.yaml#/components/parameters/idPathParam'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/LocationTo'
+
+components:
+  securitySchemes:
+    tvm-user-ticket:
+      type: apiKey
+      in: header
+      name: X-Ya-User-Ticket
+
+security:
+  - tvm-user-ticket: [ ]
