@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.github.dockerjava.api.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.ifmo.pokebet.auth.model.User;
 import ru.ifmo.pokebet.auth.service.UserService;
 import ru.ifmo.pokebet.domain.Bet;
@@ -39,11 +40,16 @@ public class FightQueryService {
                 .toList();
     }
 
+    @Transactional
     public Fight createFight(FightRequestTo fightRequestTo, User user) {
         if (!pokemonQueryService.existsById(fightRequestTo.getFirstPokemonId()) ||
                 !pokemonQueryService.existsById(fightRequestTo.getSecondPokemonId())
         ) {
             throw new NotFoundException("pokemon doesn't exist");
+        }
+
+        if (fightRequestTo.getFirstPokemonId().equals(fightRequestTo.getSecondPokemonId())) {
+            throw new RuntimeException("can't use same pokemons");
         }
 
         if (!locationQueryService.existsById(fightRequestTo.getLocationId())) {
@@ -71,6 +77,7 @@ public class FightQueryService {
         );
     }
 
+    @Transactional
     public Fight startFight(int id, User user) {
         Fight fight = enrich(fightRepository.findById(id).orElseThrow());
 

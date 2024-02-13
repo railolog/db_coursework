@@ -1,6 +1,7 @@
 package ru.ifmo.pokebet.presentation.controller;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,16 @@ public class BetController implements BetApi {
     public ResponseEntity<BetListResponseTo> getMyBets() {
         User user = userService.getCurrentUser();
         List<Bet> bets = betQueryService.getAll(user);
+
+        return ResponseEntity.ok(mainTransformer.transformBetList(bets));
+    }
+
+    @Override
+    public ResponseEntity<BetListResponseTo> getBetByFightId(Integer id) {
+        User user = userService.getCurrentUser();
+        List<Bet> bets = betQueryService.getAll(user).stream()
+                .filter(bet -> Objects.equals(bet.getFight().getId(), id))
+                .toList();
 
         return ResponseEntity.ok(mainTransformer.transformBetList(bets));
     }

@@ -1,7 +1,5 @@
 package ru.ifmo.pokebet.domain;
 
-import java.util.List;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,16 +14,8 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Pokemon {
+public class Trainer {
     @EqualsAndHashCode.Include
     Integer id;
-    Integer hp;
-    Integer attack;
-    Integer previousStage;
-    Integer trainerId;
-    Integer defense;
-    Integer speed;
     String name;
-    Trainer trainer;
-    List<String> types;
 }

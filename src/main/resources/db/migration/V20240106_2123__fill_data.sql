@@ -43,6 +43,7 @@ VALUES ('Electric'),
 -- Inserting data into has_type table
 INSERT INTO has_type (TYPE_ID, POKEMON_ID)
 VALUES (1, 1),
+       (2, 1),
        (2, 2),
        (3, 3);
 

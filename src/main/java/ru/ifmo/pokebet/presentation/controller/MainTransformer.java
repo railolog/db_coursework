@@ -2,11 +2,13 @@ package ru.ifmo.pokebet.presentation.controller;
 
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.ifmo.pokebet.domain.Bet;
 import ru.ifmo.pokebet.domain.Fight;
 import ru.ifmo.pokebet.domain.Location;
 import ru.ifmo.pokebet.domain.Pokemon;
+import ru.ifmo.pokebet.domain.Trainer;
 import ru.pokebet.openapi.model.BetListResponseTo;
 import ru.pokebet.openapi.model.BetResponseTo;
 import ru.pokebet.openapi.model.FightListResponseTo;
@@ -15,14 +17,29 @@ import ru.pokebet.openapi.model.LocationListTo;
 import ru.pokebet.openapi.model.LocationTo;
 import ru.pokebet.openapi.model.PokemonListTo;
 import ru.pokebet.openapi.model.PokemonTo;
+import ru.pokebet.openapi.model.TrainerResponseTo;
 
+@Slf4j
 @Component
 public class MainTransformer {
+
+    public TrainerResponseTo transform(Trainer trainer) {
+        if (trainer == null) {
+            log.warn("Skipping trainer transform, because trainer is null");
+            return new TrainerResponseTo();
+        }
+
+        return new TrainerResponseTo()
+                .id(trainer.getId())
+                .name(trainer.getName());
+    }
+
     public PokemonTo transform(Pokemon pokemon) {
         return new PokemonTo()
                 .id(pokemon.getId())
                 .name(pokemon.getName())
-                .type("TODO");
+                .trainer(transform(pokemon.getTrainer()))
+                .types(pokemon.getTypes());
     }
 
     public PokemonListTo transformPokemonList(List<Pokemon> pokemons) {

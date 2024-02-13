@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import ru.ifmo.pokebet.domain.Pokemon;
+import ru.ifmo.pokebet.domain.Trainer;
 
 @Component
 public class PokemonMapper implements RowMapper<Pokemon> {
@@ -20,6 +21,12 @@ public class PokemonMapper implements RowMapper<Pokemon> {
                 .defense(rs.getInt("defense"))
                 .speed(rs.getInt("speed"))
                 .name(rs.getString("name"))
+                .trainer(
+                        Trainer.builder()
+                                .id(rs.getInt("trainer_id"))
+                                .name(rs.getString("tname"))
+                                .build()
+                )
                 .build();
     }
 }

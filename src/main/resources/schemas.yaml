@@ -135,23 +135,31 @@ components:
         pokemons:
           type: array
           items:
-              - $ref: "#/components/schemas/PokemonTo"
+            - $ref: "#/components/schemas/PokemonTo"
 
     PokemonTo:
       type: object
-      required: [  ]
+      required: [ ]
       properties:
         id:
           type: integer
           format: int32
         name:
           type: string
-        type:
-          type: string
-        trainer:
-          type: object
-          properties:
+        types:
+          type: array
+          items:
             type: string
+        trainer:
+          $ref: "#/components/schemas/TrainerResponseTo"
+
+    TrainerResponseTo:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
 
     LocationListTo:
       type: object

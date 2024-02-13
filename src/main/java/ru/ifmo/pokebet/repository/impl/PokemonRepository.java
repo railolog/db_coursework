@@ -15,12 +15,22 @@ import ru.ifmo.pokebet.repository.mapper.PokemonMapper;
 @RequiredArgsConstructor
 public class PokemonRepository {
     private static final String SELECT_BASE_QUERY
-            = " SELECT *"
-            + " FROM pokemon";
+            = " SELECT pokemon.id as id, hp, attack, previous_stage, trainer_id, defense, speed,"
+            + " pokemon.name as name, t.id as tid, t.name as tname"
+            + " FROM pokemon"
+            + " join trainer t on pokemon.trainer_id = t.id";
 
     private static final String SELECT_BY_ID_QUERY
             = SELECT_BASE_QUERY
-            + " WHERE id = :id ";
+            + " WHERE pokemon.id = :id ";
+
+    private static final String SELECT_TYPE_BY_ID_QUERY
+            = """
+                 select pt.type as type from pokemon
+                 join has_type ht on pokemon.id = ht.pokemon_id
+                 join pokemon_type pt on ht.type_id = pt.id
+                 where pokemon.id=:id
+                 """;
 
     private final NamedParameterJdbcOperations jdbcTemplate;
     private final PokemonMapper pokemonMapper;
@@ -43,6 +53,14 @@ public class PokemonRepository {
         return jdbcTemplate.query(
                 SELECT_BASE_QUERY,
                 pokemonMapper
+        );
+    }
+
+    public List<String> findTypesById(int id) {
+        return jdbcTemplate.query(
+                SELECT_TYPE_BY_ID_QUERY,
+                Map.of("id", id),
+                ((rs, rowNum) -> rs.getString("type"))
         );
     }
 }

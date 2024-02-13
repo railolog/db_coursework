@@ -17,8 +17,10 @@ import ru.ifmo.pokebet.repository.mapper.FightMapper;
 @RequiredArgsConstructor
 public class FightRepository {
     private static final String SELECT_BASE_QUERY
-            = " SELECT *"
-            + " FROM fight";
+            = " SELECT * "
+            + " FROM fight ";
+
+    private static final String ORDER_BY_ID = " order by id ";
 
     private static final String SELECT_BY_ID_QUERY
             = SELECT_BASE_QUERY
@@ -26,7 +28,8 @@ public class FightRepository {
 
     private static final String SELECT_BY_USER_ID_QUERY
             = SELECT_BASE_QUERY
-            + " WHERE user_id = :user_id ";
+            + " WHERE user_id = :user_id "
+            + ORDER_BY_ID;
 
     private static final String INSERT_WITH_RETURNING
             = " INSERT INTO fight("

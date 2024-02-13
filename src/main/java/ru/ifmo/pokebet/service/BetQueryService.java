@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.github.dockerjava.api.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.ifmo.pokebet.auth.model.User;
 import ru.ifmo.pokebet.auth.service.UserService;
 import ru.ifmo.pokebet.domain.Bet;
@@ -32,6 +33,7 @@ public class BetQueryService {
                 .toList();
     }
 
+    @Transactional
     public Bet createBet(BetRequestTo betRequestTo, User user) {
         if (!fightQueryService.existsById(betRequestTo.getFightId())) {
             throw new NotFoundException("fight doesn't exist");
