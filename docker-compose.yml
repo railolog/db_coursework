@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      PGAAS_DATASOURCE_URL: jdbc:postgresql://db:5432/main
+      PGAAS_DATASOURCE_SERVER: db
+      PGAAS_DATASOURCE_PORT: 5432
+      PGAAS_DATASOURCE_DB: main
+      PGAAS_DATASOURCE_USERNAME: user
+      PGAAS_DATASOURCE_PASSWORD: pass
+
+      JWT_TOKEN: railolograilolograilolograilolograilolograilolog
+      SERVER_PORT: 8080
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16
+    shm_size: 128mb
+    user: "1298116315:593637566"
+    environment:
+      POSTGRES_DB: main
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U user -d main'"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres/db:/var/lib/postgresql/data
