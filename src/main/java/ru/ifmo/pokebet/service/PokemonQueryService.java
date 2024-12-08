@@ -6,7 +6,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.ifmo.pokebet.domain.Pokemon;
-import ru.ifmo.pokebet.repository.impl.PokemonRepository;
+import ru.ifmo.pokebet.repository.PokemonRepository;
 
 @Service
 @RequiredArgsConstructor

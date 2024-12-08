@@ -1,4 +1,4 @@
-package ru.ifmo.pokebet.repository.impl;
+package ru.ifmo.pokebet.repository;
 
 import java.util.List;
 import java.util.Map;

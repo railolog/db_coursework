@@ -14,9 +14,12 @@ public class FlywayConfiguration {
     public DriverManagerDataSource flywayDataSource(
             @Value("${pgaas.datasource.url}") String jdbcUrl,
             @Value("${pgaas.datasource.username}") String username,
-            @Value("${pgaas.datasource.password}") String password
+            @Value("${pgaas.datasource.password}") String password,
+            @Value("${spring.datasource.driver-class-name}") String driverName
     ) {
-        return new DriverManagerDataSource(jdbcUrl, username, password);
+        DriverManagerDataSource dataSource = new DriverManagerDataSource(jdbcUrl, username, password);
+        dataSource.setDriverClassName(driverName);
+        return dataSource;
     }
 
     @Bean

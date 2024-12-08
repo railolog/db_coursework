@@ -14,8 +14,8 @@ import ru.ifmo.pokebet.domain.Bet;
 import ru.ifmo.pokebet.domain.Fight;
 import ru.ifmo.pokebet.domain.Location;
 import ru.ifmo.pokebet.domain.Pokemon;
-import ru.ifmo.pokebet.repository.impl.BetRepository;
-import ru.ifmo.pokebet.repository.impl.FightRepository;
+import ru.ifmo.pokebet.repository.BetRepository;
+import ru.ifmo.pokebet.repository.FightRepository;
 import ru.pokebet.openapi.model.FightRequestTo;
 
 @Service

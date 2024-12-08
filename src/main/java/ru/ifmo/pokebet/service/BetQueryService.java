@@ -12,7 +12,7 @@ import ru.ifmo.pokebet.auth.service.UserService;
 import ru.ifmo.pokebet.domain.Bet;
 import ru.ifmo.pokebet.domain.Fight;
 import ru.ifmo.pokebet.exception.BalanceException;
-import ru.ifmo.pokebet.repository.impl.BetRepository;
+import ru.ifmo.pokebet.repository.BetRepository;
 import ru.pokebet.openapi.model.BetRequestTo;
 
 @Service

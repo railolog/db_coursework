@@ -1,4 +1,4 @@
-package ru.ifmo.pokebet.repository.impl;
+package ru.ifmo.pokebet.repository;
 
 import java.util.List;
 import java.util.Map;
@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import ru.ifmo.pokebet.auth.model.User;
 import ru.ifmo.pokebet.domain.Bet;
-import ru.ifmo.pokebet.domain.Fight;
 import ru.ifmo.pokebet.repository.mapper.BetMapper;
 
 @Repository
