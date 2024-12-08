@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import com.github.dockerjava.api.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +44,7 @@ public class FightQueryService {
         if (!pokemonQueryService.existsById(fightRequestTo.getFirstPokemonId()) ||
                 !pokemonQueryService.existsById(fightRequestTo.getSecondPokemonId())
         ) {
-            throw new NotFoundException("pokemon doesn't exist");
+            throw new RuntimeException("pokemon doesn't exist");
         }
 
         if (fightRequestTo.getFirstPokemonId().equals(fightRequestTo.getSecondPokemonId())) {
@@ -53,7 +52,7 @@ public class FightQueryService {
         }
 
         if (!locationQueryService.existsById(fightRequestTo.getLocationId())) {
-            throw new NotFoundException("location doesn't exist");
+            throw new RuntimeException("location doesn't exist");
         }
 
         Fight fight = enrich(new Fight(
