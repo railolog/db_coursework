@@ -11,6 +11,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +24,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import ru.ifmo.pokebet.auth.service.JwtService;
 import ru.ifmo.pokebet.auth.service.UserService;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -40,28 +42,31 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         // Получаем токен из заголовка
-//        var authHeader = request.getHeader(HEADER_NAME);
+        var authHeader = request.getHeader(HEADER_NAME);
 
         Cookie[] cookies = request.getCookies();
+        Optional<Cookie> cookie;
         if (cookies == null) {
+            cookie = Optional.empty();
+        } else {
+            cookie = Arrays.stream(cookies).
+                    filter(cookie1 -> Objects.equals(cookie1.getName(), COOKIE_NAME))
+                    .findFirst();
+        }
+
+
+        String jwt;
+        log.error(authHeader);
+        if (!StringUtils.isEmpty(authHeader) && StringUtils.startsWith(authHeader, BEARER_PREFIX)) {
+            jwt = authHeader.substring(BEARER_PREFIX.length());
+            log.error(jwt);
+        } else if (cookie.isPresent()) {
+            jwt = cookie.get().getValue();
+        } else {
             filterChain.doFilter(request, response);
             return;
         }
 
-        Optional<Cookie> cookie = Arrays.stream(cookies).
-                filter(cookie1 -> Objects.equals(cookie1.getName(), COOKIE_NAME))
-                .findFirst();
-
-
-//        if (StringUtils.isEmpty(authHeader) || !StringUtils.startsWith(authHeader, BEARER_PREFIX)) {
-        if (cookie.isEmpty()) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        // Обрезаем префикс и получаем имя пользователя из токена
-//        var jwt = authHeader.substring(BEARER_PREFIX.length());
-        var jwt = cookie.get().getValue();
         var username = jwtService.extractUserName(jwt);
 
         if (StringUtils.isNotEmpty(username) && SecurityContextHolder.getContext().getAuthentication() == null) {

@@ -28,7 +28,7 @@ services:
       POSTGRES_PASSWORD: pass
     healthcheck:
       test: ["CMD-SHELL", "sh -c 'pg_isready -U user -d main'"]
-      interval: 10s
+      interval: 5s
       timeout: 3s
       retries: 5
     ports:
