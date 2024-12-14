@@ -10,6 +10,7 @@ import ru.ifmo.pokebet.auth.model.User;
 import ru.ifmo.pokebet.auth.service.UserService;
 import ru.ifmo.pokebet.domain.Bet;
 import ru.ifmo.pokebet.domain.Fight;
+import ru.ifmo.pokebet.service.BetManagementService;
 import ru.ifmo.pokebet.service.BetQueryService;
 import ru.ifmo.pokebet.service.FightQueryService;
 import ru.pokebet.openapi.api.FightApi;
@@ -25,6 +26,7 @@ public class FightController implements FightApi {
     private final BetQueryService betQueryService;
     private final MainTransformer mainTransformer;
     private final UserService userService;
+    private final BetManagementService betManagementService;
 
     @Override
     public ResponseEntity<FightResponseTo> createFight(FightRequestTo fightRequestTo) {
@@ -36,7 +38,7 @@ public class FightController implements FightApi {
 
     @Override
     public ResponseEntity<FightResponseTo> getFightById(Integer id) {
-        Optional<Fight> fight = fightQueryService.getById(id);
+        Optional<Fight> fight = fightQueryService.findById(id);
 
         return fight
                 .map(value -> ResponseEntity.ok(mainTransformer.transform(value)))
@@ -46,7 +48,9 @@ public class FightController implements FightApi {
     @Override
     public ResponseEntity<StartFightResponseTo> startFight(Integer id) {
         User user = userService.getCurrentUser();
-        Fight fight = fightQueryService.startFight(id, user);
+        betManagementService.startFight(id, user);
+
+        Fight fight = fightQueryService.findById(id).get();
         List<Bet> bets = betQueryService.getAll(user)
                 .stream()
                 .filter(bet -> bet.getFight().getId().equals(id))

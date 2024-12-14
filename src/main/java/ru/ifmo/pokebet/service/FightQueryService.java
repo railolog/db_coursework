@@ -1,7 +1,6 @@
 package ru.ifmo.pokebet.service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ifmo.pokebet.auth.model.User;
 import ru.ifmo.pokebet.auth.service.UserService;
-import ru.ifmo.pokebet.domain.Bet;
 import ru.ifmo.pokebet.domain.Fight;
 import ru.ifmo.pokebet.domain.Location;
 import ru.ifmo.pokebet.domain.Pokemon;
@@ -29,7 +27,7 @@ public class FightQueryService {
     private final BetRepository betRepository;
     private final UserService userService;
 
-    public Optional<Fight> getById(int id) {
+    public Optional<Fight> findById(int id) {
         Optional<Fight> fightOpt = fightRepository.findById(id);
 
         return fightOpt.map(this::enrich);
@@ -39,6 +37,11 @@ public class FightQueryService {
         return fightRepository.findAll(user.getId()).stream()
                 .map(this::enrich)
                 .toList();
+    }
+
+    @Transactional
+    public Fight update(Fight fight, User user) {
+        return fightRepository.update(fight, user);
     }
 
     @Transactional
@@ -83,41 +86,6 @@ public class FightQueryService {
         ));
     }
 
-    @Transactional
-    public Fight startFight(int id, User user) {
-        Fight fight = enrich(
-                fightRepository
-                        .findById(id)
-                        .orElseThrow(() -> new NotFoundException("Fight with id [" + id + "] doesn't exist"))
-        );
-
-        boolean firstWon = fightRatioService.firstWon(fight);
-
-        List<Bet> bets = betRepository.findAll(user.getId()).stream()
-                .filter(bet -> Objects.equals(bet.getFight().getId(), fight.getId()))
-                .toList();
-
-        bets.forEach(bet -> bet.setIncome(income(bet, firstWon)));
-        bets.forEach(betRepository::update);
-
-        double income = bets.stream()
-                .mapToDouble(bet -> income(bet, firstWon))
-                .sum();
-
-        fight.setCompleted(true);
-        fight.setFirstWon(firstWon);
-        Fight updatedFight = fightRepository.update(fight, user);
-
-        user.setBalance(user.getBalance() + income);
-        userService.update(user);
-
-        return enrich(updatedFight);
-    }
-
-    public boolean existsById(int id) {
-        return fightRepository.findById(id).isPresent();
-    }
-
     private Fight enrich(Fight fight) {
         Pokemon firstPokemon = pokemonQueryService.findById(fight.getFirstPokemon().getId()).orElseThrow();
         Pokemon secondPokemon = pokemonQueryService.findById(fight.getSecondPokemon().getId()).orElseThrow();
@@ -128,13 +96,5 @@ public class FightQueryService {
         fight.setLocation(location);
 
         return fight;
-    }
-
-    private double income(Bet bet, boolean firstWon) {
-        if (firstWon && bet.getChoice() || !firstWon && !bet.getChoice()) {
-            return bet.getBetCoef() * bet.getCredits();
-        }
-
-        return 0;
     }
 }

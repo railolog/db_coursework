@@ -34,8 +34,13 @@ public class BetQueryService {
     }
 
     @Transactional
+    public Bet update(Bet bet) {
+        return betRepository.update(bet);
+    }
+
+    @Transactional
     public Bet createBet(BetRequestTo betRequestTo, User user) {
-        Fight fight = fightQueryService.getById(betRequestTo.getFightId())
+        Fight fight = fightQueryService.findById(betRequestTo.getFightId())
                 .orElseThrow(
                         () -> new NotFoundException("Fight with id [" + betRequestTo.getFightId() + "] doesn't exist")
                 );
@@ -61,7 +66,7 @@ public class BetQueryService {
     }
 
     private Bet enrich(Bet bet) {
-        Fight fight = fightQueryService.getById(bet.getFight().getId()).orElseThrow();
+        Fight fight = fightQueryService.findById(bet.getFight().getId()).orElseThrow();
         bet.setFight(fight);
 
         return bet;
