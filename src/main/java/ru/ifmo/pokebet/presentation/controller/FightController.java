@@ -8,17 +8,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import ru.ifmo.pokebet.auth.model.User;
 import ru.ifmo.pokebet.auth.service.UserService;
+import ru.ifmo.pokebet.domain.Bet;
 import ru.ifmo.pokebet.domain.Fight;
+import ru.ifmo.pokebet.service.BetQueryService;
 import ru.ifmo.pokebet.service.FightQueryService;
 import ru.pokebet.openapi.api.FightApi;
 import ru.pokebet.openapi.model.FightListResponseTo;
 import ru.pokebet.openapi.model.FightRequestTo;
 import ru.pokebet.openapi.model.FightResponseTo;
+import ru.pokebet.openapi.model.StartFightResponseTo;
 
 @RestController
 @RequiredArgsConstructor
 public class FightController implements FightApi {
     private final FightQueryService fightQueryService;
+    private final BetQueryService betQueryService;
     private final MainTransformer mainTransformer;
     private final UserService userService;
 
@@ -40,10 +44,19 @@ public class FightController implements FightApi {
     }
 
     @Override
-    public ResponseEntity<FightResponseTo> startFight(Integer id) {
-        Fight fight = fightQueryService.startFight(id, userService.getCurrentUser());
+    public ResponseEntity<StartFightResponseTo> startFight(Integer id) {
+        User user = userService.getCurrentUser();
+        Fight fight = fightQueryService.startFight(id, user);
+        List<Bet> bets = betQueryService.getAll(user)
+                .stream()
+                .filter(bet -> bet.getFight().getId().equals(id))
+                .toList();
 
-        return ResponseEntity.ok(mainTransformer.transform(fight));
+        return ResponseEntity.ok(
+                new StartFightResponseTo()
+                        .fight(mainTransformer.transform(fight))
+                        .bets(mainTransformer.transformBetList(bets).getBets())
+        );
     }
 
     @Override

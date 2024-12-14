@@ -97,6 +97,9 @@ public class FightQueryService {
                 .filter(bet -> Objects.equals(bet.getFight().getId(), fight.getId()))
                 .toList();
 
+        bets.forEach(bet -> bet.setIncome(income(bet, fight, firstWon)));
+        bets.forEach(betRepository::update);
+
         double income = bets.stream()
                 .mapToDouble(bet -> income(bet, fight, firstWon))
                 .sum();

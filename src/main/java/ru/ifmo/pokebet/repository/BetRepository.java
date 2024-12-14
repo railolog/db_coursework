@@ -43,6 +43,16 @@ public class BetRepository {
             + " )"
             + " RETURNING * ";
 
+    private static final String UPDATE
+            = " UPDATE bet"
+            + " SET "
+            + "   income = :income "
+            + " WHERE id = :id ";
+
+    private static final String UPDATE_WITH_RETURNING
+            = UPDATE
+            + " RETURNING * ";
+
     private final NamedParameterJdbcOperations jdbcTemplate;
     private final BetMapper betMapper;
 
@@ -72,6 +82,17 @@ public class BetRepository {
         return jdbcTemplate.queryForObject(
                 INSERT_WITH_RETURNING,
                 buildParametersToUpdateQuery(bet, user),
+                betMapper
+        );
+    }
+
+    public Bet update(Bet bet) {
+        return jdbcTemplate.queryForObject(
+                UPDATE_WITH_RETURNING,
+                Map.of(
+                        "id", bet.getId(),
+                        "income", bet.getIncome()
+                ),
                 betMapper
         );
     }

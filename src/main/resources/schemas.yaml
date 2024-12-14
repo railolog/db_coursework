@@ -77,6 +77,9 @@ components:
         betCoef:
           type: number
           format: double
+        profit:
+          type: number
+          format: double
 
 
     BetListResponseTo:
@@ -104,6 +107,16 @@ components:
           type: array
           items:
             - $ref: "#/components/schemas/FightResponseTo"
+
+    StartFightResponseTo:
+      type: object
+      properties:
+        fight:
+          $ref: "#/components/schemas/FightResponseTo"
+        bets:
+          type: array
+          items:
+            - $ref: "#/components/schemas/BetResponseTo"
 
     FightResponseTo:
       type: object

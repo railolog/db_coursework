@@ -205,7 +205,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'schemas.yaml#/components/schemas/FightResponseTo'
+                $ref: 'schemas.yaml#/components/schemas/StartFightResponseTo'
 
   /pokemons:
     get:

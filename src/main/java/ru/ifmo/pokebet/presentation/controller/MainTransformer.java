@@ -92,7 +92,8 @@ public class MainTransformer {
                 .id(bet.getId())
                 .fight(transform(bet.getFight()))
                 .credits(bet.getCredits())
-                .firstPokemonChosen(bet.getChoice());
+                .firstPokemonChosen(bet.getChoice())
+                .profit(bet.getIncome());
     }
 
     public BetListResponseTo transformBetList(List<Bet> bets) {
