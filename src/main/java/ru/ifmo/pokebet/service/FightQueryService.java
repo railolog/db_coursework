@@ -77,10 +77,10 @@ public class FightQueryService {
         fight.setCoefficientFirst(ratio.get(0));
         fight.setCoefficientSecond(ratio.get(1));
 
-        return fightRepository.save(
+        return enrich(fightRepository.save(
                 fight,
                 user
-        );
+        ));
     }
 
     @Transactional
