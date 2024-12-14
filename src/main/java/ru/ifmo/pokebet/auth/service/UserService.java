@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.ifmo.pokebet.auth.model.Role;
 import ru.ifmo.pokebet.auth.model.User;
 import ru.ifmo.pokebet.auth.repo.UserRepository;
+import ru.ifmo.pokebet.exception.UserAlreadyExists;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +37,7 @@ public class UserService {
     public User create(User user) {
         if (repository.existsByUsername(user.getUsername())) {
             // Заменить на свои исключения
-            throw new RuntimeException("Пользователь с таким именем уже существует");
+            throw new UserAlreadyExists(user.getUsername());
         }
 
         return save(user);

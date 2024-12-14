@@ -30,6 +30,12 @@ paths:
             application/json:
               schema:
                 $ref: 'schemas.yaml#/components/schemas/JwtResponseTo'
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/ErrorResponseTo'
 
   /auth/signin:
     post:

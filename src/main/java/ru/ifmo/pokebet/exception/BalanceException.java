@@ -1,7 +1,9 @@
 package ru.ifmo.pokebet.exception;
 
-public class BalanceException extends RuntimeException{
+import org.springframework.http.HttpStatus;
+
+public class BalanceException extends ApiException {
     public BalanceException(String message) {
-        super(message);
+        super(HttpStatus.PAYMENT_REQUIRED, message);
     }
 }

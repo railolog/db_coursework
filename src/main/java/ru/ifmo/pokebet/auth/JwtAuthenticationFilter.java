@@ -56,10 +56,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 
         String jwt;
-        log.error(authHeader);
         if (!StringUtils.isEmpty(authHeader) && StringUtils.startsWith(authHeader, BEARER_PREFIX)) {
             jwt = authHeader.substring(BEARER_PREFIX.length());
-            log.error(jwt);
         } else if (cookie.isPresent()) {
             jwt = cookie.get().getValue();
         } else {

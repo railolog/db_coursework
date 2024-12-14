@@ -11,6 +11,7 @@ import ru.ifmo.pokebet.auth.service.UserService;
 import ru.ifmo.pokebet.domain.Bet;
 import ru.ifmo.pokebet.domain.Fight;
 import ru.ifmo.pokebet.exception.BalanceException;
+import ru.ifmo.pokebet.exception.NotFoundException;
 import ru.ifmo.pokebet.repository.BetRepository;
 import ru.pokebet.openapi.model.BetRequestTo;
 
@@ -35,7 +36,7 @@ public class BetQueryService {
     @Transactional
     public Bet createBet(BetRequestTo betRequestTo, User user) {
         if (!fightQueryService.existsById(betRequestTo.getFightId())) {
-            throw new RuntimeException("fight doesn't exist");
+            throw new NotFoundException("Fight with id [" + betRequestTo.getFightId() + "] doesn't exist");
         }
 
         double balance = user.getBalance();

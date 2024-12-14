@@ -13,6 +13,8 @@ import ru.ifmo.pokebet.domain.Bet;
 import ru.ifmo.pokebet.domain.Fight;
 import ru.ifmo.pokebet.domain.Location;
 import ru.ifmo.pokebet.domain.Pokemon;
+import ru.ifmo.pokebet.exception.NotFoundException;
+import ru.ifmo.pokebet.exception.SamePokemonUsedException;
 import ru.ifmo.pokebet.repository.BetRepository;
 import ru.ifmo.pokebet.repository.FightRepository;
 import ru.pokebet.openapi.model.FightRequestTo;
@@ -41,24 +43,29 @@ public class FightQueryService {
 
     @Transactional
     public Fight createFight(FightRequestTo fightRequestTo, User user) {
-        if (!pokemonQueryService.existsById(fightRequestTo.getFirstPokemonId()) ||
-                !pokemonQueryService.existsById(fightRequestTo.getSecondPokemonId())
+        Integer firstPokemonId = fightRequestTo.getFirstPokemonId();
+        Integer secondPokemonId = fightRequestTo.getSecondPokemonId();
+        if (!pokemonQueryService.existsById(firstPokemonId) || !pokemonQueryService.existsById(secondPokemonId)
         ) {
-            throw new RuntimeException("pokemon doesn't exist");
+            throw new NotFoundException(String.format(
+                    "Pokemons with ids [%d] and [%d] not found",
+                    firstPokemonId,
+                    secondPokemonId
+            ));
         }
 
-        if (fightRequestTo.getFirstPokemonId().equals(fightRequestTo.getSecondPokemonId())) {
-            throw new RuntimeException("can't use same pokemons");
+        if (firstPokemonId.equals(secondPokemonId)) {
+            throw new SamePokemonUsedException();
         }
 
         if (!locationQueryService.existsById(fightRequestTo.getLocationId())) {
-            throw new RuntimeException("location doesn't exist");
+            throw new NotFoundException("Location with id [" + fightRequestTo.getLocationId() + "] doesn't exist");
         }
 
         Fight fight = enrich(new Fight(
                 null,
-                Pokemon.builder().id(fightRequestTo.getFirstPokemonId()).build(),
-                Pokemon.builder().id(fightRequestTo.getSecondPokemonId()).build(),
+                Pokemon.builder().id(firstPokemonId).build(),
+                Pokemon.builder().id(secondPokemonId).build(),
                 Location.builder().id(fightRequestTo.getLocationId()).build(),
                 null,
                 null,
@@ -78,7 +85,11 @@ public class FightQueryService {
 
     @Transactional
     public Fight startFight(int id, User user) {
-        Fight fight = enrich(fightRepository.findById(id).orElseThrow());
+        Fight fight = enrich(
+                fightRepository
+                        .findById(id)
+                        .orElseThrow(() -> new NotFoundException("Fight with id [" + id + "] doesn't exist"))
+        );
 
         boolean firstWon = fightRatioService.firstWon(fight);
 
@@ -118,7 +129,7 @@ public class FightQueryService {
 
     private double income(Bet bet, Fight fight, boolean firstWon) {
         if (firstWon && bet.getChoice()) {
-                return fight.getCoefficientFirst() * bet.getCredits();
+            return fight.getCoefficientFirst() * bet.getCredits();
         }
 
         if (!firstWon && !bet.getChoice()) {

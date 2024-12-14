@@ -179,3 +179,11 @@ components:
           type: string
         description:
           type: string
+
+    ErrorResponseTo:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
