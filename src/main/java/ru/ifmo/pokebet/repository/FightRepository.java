@@ -114,7 +114,7 @@ public class FightRepository {
                 .addValue("is_completed", fight.isCompleted())
                 .addValue("coefficient", fight.getCoefficientFirst())
                 .addValue("coefficient_second", fight.getCoefficientSecond())
-                .addValue("first_won", fight.isFirstWon())
+                .addValue("first_won", fight.getFirstWon())
                 .addValue("user_id", user.getId());
     }
 
@@ -127,7 +127,7 @@ public class FightRepository {
                 .addValue("is_completed", fight.isCompleted())
                 .addValue("coefficient", fight.getCoefficientFirst())
                 .addValue("coefficient_second", fight.getCoefficientSecond())
-                .addValue("first_won", fight.isFirstWon())
+                .addValue("first_won", fight.getFirstWon())
                 .addValue("user_id", user.getId());
     }
 }

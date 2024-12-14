@@ -22,6 +22,6 @@ public class Fight {
     Location location;
     Double coefficientFirst;
     Double coefficientSecond;
-    boolean firstWon;
+    Boolean firstWon;
     boolean isCompleted;
 }

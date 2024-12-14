@@ -62,7 +62,7 @@ public class FightQueryService {
                 Location.builder().id(fightRequestTo.getLocationId()).build(),
                 null,
                 null,
-                false,
+                null,
                 false
         ));
 

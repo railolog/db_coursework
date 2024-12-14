@@ -33,7 +33,7 @@ public class FightMapper implements RowMapper<Fight> {
                 .isCompleted(rs.getBoolean("is_completed"))
                 .coefficientFirst(rs.getDouble("coefficient"))
                 .coefficientSecond(rs.getDouble("coefficient_second"))
-                .firstWon(rs.getBoolean("first_won"))
+                .firstWon(rs.getObject("first_won", Boolean.class))
                 .build();
     }
 }

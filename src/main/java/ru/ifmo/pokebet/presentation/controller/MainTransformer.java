@@ -75,7 +75,7 @@ public class MainTransformer {
                 .location(this.transform(fight.getLocation()))
                 .coefficientFirst(fight.getCoefficientFirst())
                 .coefficientSecond(fight.getCoefficientSecond())
-                .firstWon(fight.isFirstWon())
+                .firstWon(fight.getFirstWon())
                 .isCompleted(fight.isCompleted());
     }
 
