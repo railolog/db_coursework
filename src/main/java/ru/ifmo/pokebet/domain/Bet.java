@@ -21,5 +21,6 @@ public class Bet {
     Fight fight;
     Integer credits;
     Boolean choice;
+    Double betCoef;
     Double income;
 }

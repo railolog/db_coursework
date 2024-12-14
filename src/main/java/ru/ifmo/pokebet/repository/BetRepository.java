@@ -33,12 +33,14 @@ public class BetRepository {
             + "   user_id,"
             + "   fight_id,"
             + "   credits,"
+            + "   coef,"
             + "   choice"
             + " )"
             + " VALUES ("
             + "   :user_id,"
             + "   :fight_id,"
             + "   :credits,"
+            + "   :coef,"
             + "   :choice"
             + " )"
             + " RETURNING * ";
@@ -102,6 +104,7 @@ public class BetRepository {
                 .addValue("user_id", user.getId())
                 .addValue("fight_id", bet.getFight().getId())
                 .addValue("credits", bet.getCredits())
+                .addValue("coef", bet.getBetCoef())
                 .addValue("choice", bet.getChoice());
     }
 }

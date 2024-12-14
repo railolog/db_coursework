@@ -35,9 +35,10 @@ public class BetQueryService {
 
     @Transactional
     public Bet createBet(BetRequestTo betRequestTo, User user) {
-        if (!fightQueryService.existsById(betRequestTo.getFightId())) {
-            throw new NotFoundException("Fight with id [" + betRequestTo.getFightId() + "] doesn't exist");
-        }
+        Fight fight = fightQueryService.getById(betRequestTo.getFightId())
+                .orElseThrow(
+                        () -> new NotFoundException("Fight with id [" + betRequestTo.getFightId() + "] doesn't exist")
+                );
 
         double balance = user.getBalance();
         if (balance < betRequestTo.getCredits()) {
@@ -47,11 +48,13 @@ public class BetQueryService {
         user.setBalance(balance - betRequestTo.getCredits());
         user = userService.update(user);
 
+        Boolean firstChosen = betRequestTo.getFirstPokemonChosen();
         Bet bet = Bet.builder()
                 .userId(user.getId())
                 .fight(Fight.builder().id(betRequestTo.getFightId()).build())
                 .credits(betRequestTo.getCredits())
-                .choice(betRequestTo.getFirstPokemonChosen())
+                .choice(firstChosen)
+                .betCoef(firstChosen ? fight.getCoefficientFirst() : fight.getCoefficientSecond())
                 .build();
 
         return enrich(betRepository.save(bet, user));

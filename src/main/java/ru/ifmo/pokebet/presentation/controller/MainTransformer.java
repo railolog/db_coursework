@@ -93,6 +93,7 @@ public class MainTransformer {
                 .fight(transform(bet.getFight()))
                 .credits(bet.getCredits())
                 .firstPokemonChosen(bet.getChoice())
+                .betCoef(bet.getBetCoef())
                 .profit(bet.getIncome());
     }
 

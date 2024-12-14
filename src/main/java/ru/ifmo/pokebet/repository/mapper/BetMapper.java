@@ -19,6 +19,7 @@ public class BetMapper implements RowMapper<Bet> {
                 .userId(rs.getInt("user_id"))
                 .fight(Fight.builder().id(rs.getInt("fight_id")).build())
                 .credits(rs.getInt("credits"))
+                .betCoef(rs.getDouble("coef"))
                 .choice(rs.getBoolean("choice"))
                 .income(creditsChange == null ? null : creditsChange.doubleValue())
                 .build();
