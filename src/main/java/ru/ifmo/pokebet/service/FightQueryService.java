@@ -97,11 +97,11 @@ public class FightQueryService {
                 .filter(bet -> Objects.equals(bet.getFight().getId(), fight.getId()))
                 .toList();
 
-        bets.forEach(bet -> bet.setIncome(income(bet, fight, firstWon)));
+        bets.forEach(bet -> bet.setIncome(income(bet, firstWon)));
         bets.forEach(betRepository::update);
 
         double income = bets.stream()
-                .mapToDouble(bet -> income(bet, fight, firstWon))
+                .mapToDouble(bet -> income(bet, firstWon))
                 .sum();
 
         fight.setCompleted(true);
@@ -130,13 +130,9 @@ public class FightQueryService {
         return fight;
     }
 
-    private double income(Bet bet, Fight fight, boolean firstWon) {
-        if (firstWon && bet.getChoice()) {
-            return fight.getCoefficientFirst() * bet.getCredits();
-        }
-
-        if (!firstWon && !bet.getChoice()) {
-            return fight.getCoefficientSecond() * bet.getCredits();
+    private double income(Bet bet, boolean firstWon) {
+        if (firstWon && bet.getChoice() || !firstWon && !bet.getChoice()) {
+            return bet.getBetCoef() * bet.getCredits();
         }
 
         return 0;
