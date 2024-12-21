@@ -7,13 +7,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ifmo.pokebet.auth.model.User;
-import ru.ifmo.pokebet.auth.service.UserService;
 import ru.ifmo.pokebet.domain.Fight;
 import ru.ifmo.pokebet.domain.Location;
 import ru.ifmo.pokebet.domain.Pokemon;
 import ru.ifmo.pokebet.exception.NotFoundException;
 import ru.ifmo.pokebet.exception.SamePokemonUsedException;
-import ru.ifmo.pokebet.repository.BetRepository;
 import ru.ifmo.pokebet.repository.FightRepository;
 import ru.pokebet.openapi.model.FightRequestTo;
 
@@ -24,8 +22,6 @@ public class FightQueryService {
     private final PokemonQueryService pokemonQueryService;
     private final LocationQueryService locationQueryService;
     private final FightRatioService fightRatioService;
-    private final BetRepository betRepository;
-    private final UserService userService;
 
     public Optional<Fight> findById(int id) {
         Optional<Fight> fightOpt = fightRepository.findById(id);

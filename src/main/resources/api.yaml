@@ -219,6 +219,22 @@ paths:
             application/json:
               schema:
                 $ref: 'schemas.yaml#/components/schemas/PokemonListTo'
+    post:
+      operationId: createPokemon
+      tags: [ pokemon ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'schemas.yaml#/components/schemas/CreatePokemonRequestTo'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/PokemonTo'
 
   /pokemons/{id}:
     get:

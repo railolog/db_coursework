@@ -141,6 +141,19 @@ components:
         firstWon:
           type: boolean
 
+    CreatePokemonRequestTo:
+      type: object
+      required: [ name, types, trainerId ]
+      properties:
+        name:
+          type: string
+        types:
+          type: array
+          items:
+            type: string
+        trainerId:
+          type: integer
+
     PokemonListTo:
       type: object
       required: [ pokemons ]

@@ -41,7 +41,6 @@ public class BetManagementService {
 
         fight.setCompleted(true);
         fight.setFirstWon(firstWon);
-        Fight updatedFight = fightQueryService.update(fight, user);
 
         user.setBalance(user.getBalance() + income);
         userService.update(user);
