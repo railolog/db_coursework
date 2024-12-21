@@ -21,6 +21,10 @@ public class UserRepository {
             = SELECT_BASE_QUERY
             + " WHERE username = :username";
 
+    private static final String SELECT_BY_ID_QUERY
+            = SELECT_BASE_QUERY
+            + " WHERE id = :id";
+
     private static final String INSERT_WITH_RETURNING
             = " INSERT INTO \"user\"("
             + "   username,"
@@ -38,7 +42,8 @@ public class UserRepository {
             = " UPDATE \"user\""
             + " SET  "
             + "   username = :username, "
-            + "   balance = :balance "
+            + "   balance = :balance, "
+            + "   role = :role "
             + " WHERE id = :id ";
 
     private static final String UPDATE_WITH_RETURNING
@@ -64,6 +69,20 @@ public class UserRepository {
 
     public boolean existsByUsername(String username) {
         return findByUsername(username).isPresent();
+    }
+
+    public Optional<User> findById(int id) {
+        try {
+            return Optional.ofNullable(
+                    jdbcTemplate.queryForObject(
+                            SELECT_BY_ID_QUERY,
+                            Map.of("id", id),
+                            userMapper
+                    )
+            );
+        } catch (EmptyResultDataAccessException ex) {
+            return Optional.empty();
+        }
     }
 
     public User save(User user) {

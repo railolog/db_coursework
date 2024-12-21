@@ -5,9 +5,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.ifmo.pokebet.auth.model.Role;
 import ru.ifmo.pokebet.auth.model.User;
 import ru.ifmo.pokebet.auth.repo.UserRepository;
+import ru.ifmo.pokebet.exception.NotFoundException;
 import ru.ifmo.pokebet.exception.UserAlreadyExists;
 
 @Service
@@ -69,16 +71,17 @@ public class UserService {
         return getByUsername(username);
     }
 
+    public User getById(int id) {
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
+    }
 
-    /**
-     * Выдача прав администратора текущему пользователю
-     * <p>
-     * Нужен для демонстрации
-     */
-    @Deprecated
-    public void getAdmin() {
-        var user = getCurrentUser();
-        user.setRole(Role.ADMIN);
-        save(user);
+    public boolean isCurrentUserAdmin() {
+        return getCurrentUser().getRole() == Role.ADMIN;
+    }
+
+    @Transactional
+    public void changeRole(User user, Role role) {
+        user.setRole(role);
+        repository.update(user);
     }
 }

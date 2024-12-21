@@ -38,8 +38,7 @@ public class PokemonController implements PokemonApi {
 
     @Override
     public ResponseEntity<PokemonTo> createPokemon(CreatePokemonRequestTo createPokemonRequestTo) {
-        User user = userService.getCurrentUser();
-        if (!user.isAdmin()) {
+        if (!userService.isCurrentUserAdmin()) {
             throw new NotAdminException();
         }
 

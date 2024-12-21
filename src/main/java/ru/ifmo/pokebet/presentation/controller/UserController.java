@@ -3,8 +3,10 @@ package ru.ifmo.pokebet.presentation.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import ru.ifmo.pokebet.auth.model.Role;
 import ru.ifmo.pokebet.auth.model.User;
 import ru.ifmo.pokebet.auth.service.UserService;
+import ru.ifmo.pokebet.exception.NotAdminException;
 import ru.pokebet.openapi.api.UserApi;
 import ru.pokebet.openapi.model.PaymentRequestTo;
 import ru.pokebet.openapi.model.UserBalanceResponseTo;
@@ -37,8 +39,27 @@ public class UserController implements UserApi {
         );
     }
 
+    @Override
+    public ResponseEntity<Void> makeAdmin(Integer id) {
+        if (!userService.isCurrentUserAdmin()) {
+            throw new NotAdminException();
+        }
+        userService.changeRole(userService.getById(id), Role.ADMIN);
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<Void> revokeAdmin(Integer id) {
+        if (!userService.isCurrentUserAdmin()) {
+            throw new NotAdminException();
+        }
+        userService.changeRole(userService.getById(id), Role.USER);
+        return ResponseEntity.ok().build();
+    }
+
     private UserInfoResponseTo transform(User user) {
         return new UserInfoResponseTo()
+                .id(user.getId())
                 .login(user.getUsername())
                 .balance(user.getBalance());
     }
